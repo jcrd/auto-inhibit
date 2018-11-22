@@ -1,4 +1,4 @@
-# auto-inhibit
+# auto-inhibit [![Build Status](https://travis-ci.org/jcrd/auto-inhibit.svg?branch=master)](https://travis-ci.org/jcrd/auto-inhibit)
 
 **auto-inhibit** manages symbolic links to itself named after programs to be run
 with an inhibition lock via **systemd-inhibit**.
