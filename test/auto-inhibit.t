@@ -11,8 +11,8 @@ SHARNESS_TEST_DIRECTORY="$(pwd)"
 
 TMPDIR="$SHARNESS_TRASH_DIRECTORY"
 
-export AUTO_INHIBIT_CONF="$(realpath test.conf)"
-export AUTO_INHIBIT_CMD="$(realpath test-inhibit.sh)"
+export AUTO_INHIBIT_CONF="$(readlink -f test.conf)"
+export AUTO_INHIBIT_CMD="$(readlink -f test-inhibit.sh)"
 export AUTO_INHIBITOR="$(which auto-inhibit)"
 
 mkdir "$TMPDIR"/check
