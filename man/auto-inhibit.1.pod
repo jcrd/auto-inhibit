@@ -1,0 +1,83 @@
+=head1 NAME
+
+auto-inhibit - automate use of systemd-inhibit
+
+=head1 SYNOPSIS
+
+B<auto-inhibit> [options] [command]
+
+=head1 DESCRIPTION
+
+auto-inhibit manages symbolic links to itself named after programs to be run
+with an inhibition lock via B<systemd-inhibit>.
+
+=head1 OPTIONS
+
+=over
+
+=item B<-h>
+
+Show help message.
+
+=item B<-d> I<DIRECTORY>
+
+Operate on I<DIRECTORY>.
+
+=back
+
+=head1 COMMANDS
+
+=over
+
+=item B<list>
+
+List existing symbolic links.
+
+=item B<generate>
+
+Create symbolic links based on configuration.
+
+=item B<check>
+
+Check that symlinks reflect the configuration.
+
+=item B<remove>
+
+Remove generated symbolic links.
+
+=item B<status>
+
+List active inhibitors.
+
+=back
+
+=head1 CONFIGURATION
+
+Options in the configuration file F</etc/auto-inhibit.conf> are passed directly
+as flags to B<systemd-inhibit>.
+
+Given F<example.conf>:
+
+ [aria2c]
+ why=Download in progress
+
+Running I<aria2c> via the symlink will result in:
+
+ systemd-inhibit --why='Download in progress' aria2c
+
+=head1 AUTHOR
+
+James Reed E<lt>jcrd@tuta.ioE<gt>
+
+=head1 REPORTING BUGS
+
+Bugs and issues can be reported here:
+L<https://github.com/jcrd/auto-inhibit/issues>
+
+=head1 COPYRIGHT
+
+Copyright 2018 James Reed. auto-inhibit is licensed under the MIT License.
+
+=head1 SEE ALSO
+
+B<systemd-inhibit>(1)

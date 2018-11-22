@@ -1,0 +1,119 @@
+#!/bin/bash
+
+set -eu
+
+readonly CONFIG="${AUTO_INHIBIT_CONF:-/etc/auto-inhibit.conf}"
+readonly COMMAND="${AUTO_INHIBIT_CMD:-/usr/bin/systemd-inhibit}"
+readonly INHIBITOR="${AUTO_INHIBITOR:-/usr/bin/auto-inhibit}"
+
+is_inhibitor_link() {
+    [[ -L "$1" && "$(/usr/bin/readlink -f "$1")" == "$INHIBITOR" ]]
+}
+
+name="$(/usr/bin/basename "$0")"
+
+if [[ "$name" != 'auto-inhibit' ]]; then
+    bltin=false
+    path=''
+
+    for p in $(type -a "$name" 2> /dev/null | /usr/bin/awk '{print $NF}'); do
+        if [[ "$p" == 'builtin' ]]; then
+            bltin=true
+            continue
+        fi
+        if ! is_inhibitor_link "$p"; then
+            path="$p"
+            break
+        fi
+    done
+
+    if [[ -z "$path" ]]; then
+        $bltin && msg='is a builtin' || msg='not found'
+        echo "$name $msg" >&2
+        exit 1
+    fi
+
+    mapfile -t flags < <(/usr/bin/iniq -p "$name" -f '--%k=%v' "$CONFIG")
+
+    exec "$COMMAND" "${flags[@]}" "$path" "$@"
+fi
+
+symdir='/usr/local/bin'
+
+declare -a links=()
+
+usage() {
+    echo 'usage: auto-inhibit [options] [command]
+
+options:
+  -h        Show help message
+  -d DIR    Operate on DIR
+
+commands:
+  list      List symlinks
+  generate  Create symlinks
+  check     Check symlinks
+  remove    Remove symlinks
+  status    List active inhibitors'
+}
+
+get_links() {
+    for f in "$symdir"/*; do
+        is_inhibitor_link "$f" && links+=("$f")
+    done
+}
+
+status() {
+    /usr/bin/systemd-inhibit --list
+    exit $?
+}
+
+while getopts ':hd:' opt; do
+    case "$opt" in
+        h) usage; exit ;;
+        d) symdir="$OPTARG" ;;
+        *) usage >&2; exit 2
+    esac
+done
+
+shift $((OPTIND - 1))
+
+[[ $# -eq 0 ]] && status
+
+case "$1" in
+    list)
+        get_links
+        for f in "${links[@]}"; do
+            echo "${f##*/}"
+        done
+        ;;
+    generate)
+        for f in $(/usr/bin/iniq -d "$CONFIG"); do
+            /usr/bin/ln -vs "$INHIBITOR" "$symdir/$f"
+        done
+        ;;
+    check)
+        ret=0
+        for f in $(/usr/bin/iniq -d "$CONFIG"); do
+            err=''
+            if [[ ! -e "$symdir/$f" ]]; then
+                err="$f does not exist"
+            elif ! is_inhibitor_link "$symdir/$f"; then
+                err="$f is not a symlink to auto-inhibit"
+            fi
+            if [[ -n "$err" ]]; then
+                echo "$err" >&2
+                ret=$((ret+1))
+            fi
+        done
+        exit $ret
+        ;;
+    remove)
+        get_links
+        for f in "${links[@]}"; do
+            /usr/bin/rm -v "$f"
+        done
+        ;;
+    status) status ;;
+    *) usage >&2; exit 2
+esac
