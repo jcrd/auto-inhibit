@@ -3,20 +3,20 @@
 set -eu
 
 readonly CONFIG="${AUTO_INHIBIT_CONF:-/etc/auto-inhibit.conf}"
-readonly COMMAND="${AUTO_INHIBIT_CMD:-/usr/bin/systemd-inhibit}"
-readonly INHIBITOR="${AUTO_INHIBITOR:-/usr/bin/auto-inhibit}"
+readonly COMMAND="${AUTO_INHIBIT_CMD:-systemd-inhibit}"
+readonly INHIBITOR="${AUTO_INHIBITOR:-$(command -v auto-inhibit)}"
 
 is_inhibitor_link() {
-    [[ -L "$1" && "$(/usr/bin/readlink -f "$1")" == "$INHIBITOR" ]]
+    [[ -L "$1" && "$(readlink -f "$1")" == "$INHIBITOR" ]]
 }
 
-name="$(/usr/bin/basename "$0")"
+name="$(basename "$0")"
 
 if [[ "$name" != 'auto-inhibit' ]]; then
     bltin=false
     path=''
 
-    for p in $(type -a "$name" 2> /dev/null | /usr/bin/awk '{print $NF}'); do
+    for p in $(type -a "$name" 2> /dev/null | awk '{print $NF}'); do
         if [[ "$p" == 'builtin' ]]; then
             bltin=true
             continue
@@ -33,7 +33,7 @@ if [[ "$name" != 'auto-inhibit' ]]; then
         exit 1
     fi
 
-    mapfile -t flags < <(/usr/bin/iniq -p "$name" -f '--%k=%v' "$CONFIG")
+    mapfile -t flags < <(iniq -p "$name" -f '--%k=%v' "$CONFIG")
 
     exec "$COMMAND" "${flags[@]}" "$path" "$@"
 fi
@@ -64,7 +64,7 @@ get_links() {
 }
 
 status() {
-    /usr/bin/systemd-inhibit --list
+    systemd-inhibit --list
     exit $?
 }
 
@@ -88,13 +88,13 @@ case "$1" in
         done
         ;;
     generate)
-        for f in $(/usr/bin/iniq -d "$CONFIG"); do
-            /usr/bin/ln -vs "$INHIBITOR" "$symdir/$f"
+        for f in $(iniq -d "$CONFIG"); do
+            ln -vs "$INHIBITOR" "$symdir/$f"
         done
         ;;
     check)
         ret=0
-        for f in $(/usr/bin/iniq -d "$CONFIG"); do
+        for f in $(iniq -d "$CONFIG"); do
             err=''
             if [[ ! -e "$symdir/$f" ]]; then
                 err="$f does not exist"
@@ -111,7 +111,7 @@ case "$1" in
     remove)
         get_links
         for f in "${links[@]}"; do
-            /usr/bin/rm -v "$f"
+            rm -v "$f"
         done
         ;;
     status) status ;;
