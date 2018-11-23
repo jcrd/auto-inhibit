@@ -11,6 +11,9 @@ SHARNESS_TEST_DIRECTORY="$(pwd)"
 
 TMPDIR="$SHARNESS_TRASH_DIRECTORY"
 
+# abort if `iniq` dependency is not found
+which iniq > /dev/null || exit 1
+
 export AUTO_INHIBIT_CONF="$(readlink -f test.conf)"
 export AUTO_INHIBIT_CMD="$(readlink -f test-inhibit.sh)"
 export AUTO_INHIBITOR="$(which auto-inhibit)"
