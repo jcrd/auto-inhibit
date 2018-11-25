@@ -61,6 +61,7 @@ get_links() {
     for f in "$symdir"/*; do
         is_inhibitor_link "$f" && links+=("$f")
     done
+    return 0
 }
 
 status() {
