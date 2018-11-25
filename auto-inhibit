@@ -93,7 +93,7 @@ case "$1" in
         done
         ;;
     check)
-        ret=0
+        r=0
         for f in $(iniq -d "$CONFIG"); do
             err=''
             if [[ ! -e "$symdir/$f" ]]; then
@@ -103,10 +103,10 @@ case "$1" in
             fi
             if [[ -n "$err" ]]; then
                 echo "$err" >&2
-                ret=$((ret+1))
+                (( r+=1 ))
             fi
         done
-        exit $ret
+        exit $r
         ;;
     remove)
         get_links
