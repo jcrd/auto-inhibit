@@ -19,6 +19,10 @@ ln -s "$AUTO_INHIBITOR" checkdir/false &&
 auto-inhibit -d checkdir check
 '
 
+test_expect_success 'Ensure failed check has correct exit code' '
+test_expect_code 2 auto-inhibit -d . check
+'
+
 test_expect_success 'Generate symlinks' '
 auto-inhibit -d . generate &&
 auto-inhibit -d . check
