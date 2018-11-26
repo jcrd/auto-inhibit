@@ -14,8 +14,8 @@ export AUTO_INHIBITOR="$(which auto-inhibit)"
 mkdir checkdir
 
 test_expect_success 'Ensure auto-inhibit check works' '
-ln -s "$AUTO_INHIBITOR" checkdir/true &&
-ln -s "$AUTO_INHIBITOR" checkdir/false &&
+ln -s "$AUTO_INHIBITOR" checkdir/env &&
+ln -s "$AUTO_INHIBITOR" checkdir/who &&
 auto-inhibit -d checkdir check
 '
 
@@ -29,12 +29,12 @@ auto-inhibit -d . check
 '
 
 test_expect_success 'List symlinks' '
-test "$(auto-inhibit -d . list)" = "false
-true"
+test "$(auto-inhibit -d . list)" = "env
+who"
 '
 
 test_expect_success 'Use symlink' '
-test "$(./true)" = "--why=Testing /usr/bin/true"
+test "$(./env)" = "--why=Testing /usr/bin/env"
 '
 
 test_expect_success 'Remove symlinks' '
