@@ -5,11 +5,11 @@ test_description='Test auto-inhibit'
 . ./sharness/sharness.sh
 
 # abort if `iniq` dependency is not found
-which iniq > /dev/null || exit 1
+command -v iniq > /dev/null || exit 1
 
 export AUTO_INHIBIT_CONF="$SHARNESS_TEST_DIRECTORY"/test.conf
 export AUTO_INHIBIT_CMD="$SHARNESS_TEST_DIRECTORY"/test-inhibit.sh
-export AUTO_INHIBITOR="$(which auto-inhibit)"
+export AUTO_INHIBITOR="$(command -v auto-inhibit)"
 
 mkdir checkdir
 
