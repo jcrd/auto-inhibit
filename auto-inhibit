@@ -8,6 +8,13 @@ readonly CONFIG="${AUTO_INHIBIT_CONF:-/etc/auto-inhibit.conf}"
 readonly COMMAND="${AUTO_INHIBIT_CMD:-systemd-inhibit}"
 readonly INHIBITOR="${AUTO_INHIBITOR:-$(command -v auto-inhibit)}"
 
+check_config() {
+    if [[ ! -e "$CONFIG" ]]; then
+        echo "$CONFIG does not exist" >&2
+        exit 1
+    fi
+}
+
 is_inhibitor_link() {
     [[ -L "$1" && "$(readlink -f "$1")" == "$INHIBITOR" ]]
 }
@@ -15,6 +22,8 @@ is_inhibitor_link() {
 name="$(basename "$0")"
 
 if [[ "$name" != 'auto-inhibit' ]]; then
+    check_config
+
     path=''
 
     for p in $(type -a "$name" 2> /dev/null | awk '{print $NF}'); do
@@ -92,11 +101,13 @@ case "$1" in
         done
         ;;
     generate)
+        check_config
         for f in $(iniq -d "$CONFIG"); do
             ln -vs "$INHIBITOR" "$symdir/$f"
         done
         ;;
     check)
+        check_config
         r=0
         for f in $(iniq -d "$CONFIG"); do
             err=''
