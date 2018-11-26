@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This project is licensed under the MIT License (see LICENSE).
+
 set -eu
 
 readonly CONFIG="${AUTO_INHIBIT_CONF:-/etc/auto-inhibit.conf}"
