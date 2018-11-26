@@ -45,6 +45,11 @@ if [[ "$name" != 'auto-inhibit' ]]; then
         exit 1
     fi
 
+    if ! iniq -qp "$name" "$CONFIG" > /dev/null; then
+        echo "$name not found in $CONFIG" >&2
+        exit 1
+    fi
+
     mapfile -t flags < <(iniq -p "$name" -f '--%k=%v' "$CONFIG")
 
     exec "$COMMAND" "${flags[@]}" "$path" "$@"
