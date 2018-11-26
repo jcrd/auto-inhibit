@@ -13,14 +13,14 @@ is_inhibitor_link() {
 name="$(basename "$0")"
 
 if [[ "$name" != 'auto-inhibit' ]]; then
-    bltin=false
     path=''
 
     for p in $(type -a "$name" 2> /dev/null | awk '{print $NF}'); do
-        if [[ "$p" == 'builtin' ]]; then
-            bltin=true
-            continue
-        fi
+        case "$p" in
+            builtin|keyword)
+                err="$p"
+                continue
+        esac
         if ! is_inhibitor_link "$p"; then
             path="$p"
             break
@@ -28,7 +28,8 @@ if [[ "$name" != 'auto-inhibit' ]]; then
     done
 
     if [[ -z "$path" ]]; then
-        $bltin && msg='is a builtin' || msg='not found'
+        msg='not found'
+        [[ -n "${err-}" ]] && msg="is a shell $err"
         echo "$name $msg" >&2
         exit 1
     fi
