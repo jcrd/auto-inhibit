@@ -9,7 +9,7 @@ command -v iniq > /dev/null || exit 1
 
 export AUTO_INHIBIT_CONF="$SHARNESS_TEST_DIRECTORY"/test.conf
 export AUTO_INHIBIT_CMD="$SHARNESS_TEST_DIRECTORY"/test-inhibit.sh
-export AUTO_INHIBITOR="$(command -v auto-inhibit)"
+export AUTO_INHIBITOR="$(readlink -f "$(command -v auto-inhibit)")"
 
 mkdir checkdir
 
