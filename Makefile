@@ -23,7 +23,7 @@ install:
 uninstall:
 	rm -f $(DESTDIR)$(BINPREFIX)/auto-inhibit
 	rm -f $(DESTDIR)/etc/auto-inhibit.conf
-	rm -f $(DESTDIR)$(MANPREFIX)/man1/iniq.1
+	rm -f $(DESTDIR)$(MANPREFIX)/man1/auto-inhibit.1
 
 clean:
 	rm -f $(MANPAGE)
