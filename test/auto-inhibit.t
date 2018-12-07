@@ -7,8 +7,9 @@ test_description='Test auto-inhibit'
 # abort if `iniq` dependency is not found
 command -v iniq > /dev/null || exit 1
 
+export PATH="$SHARNESS_TEST_DIRECTORY/bin:$PATH"
+
 export AUTO_INHIBIT_CONF="$SHARNESS_TEST_DIRECTORY"/test.conf
-export AUTO_INHIBIT_CMD="$SHARNESS_TEST_DIRECTORY"/test-inhibit.sh
 export AUTO_INHIBITOR="$(readlink -f "$(command -v auto-inhibit)")"
 
 mkdir checkdir
