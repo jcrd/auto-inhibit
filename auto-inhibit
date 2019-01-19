@@ -81,7 +81,7 @@ get_links() {
 }
 
 status() {
-    systemd-inhibit --list
+    systemd-inhibit --list --no-pager
     exit $?
 }
 
