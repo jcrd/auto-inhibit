@@ -23,6 +23,10 @@ Show help message.
 
 Operate on I<DIRECTORY>.
 
+=item B<-v>
+
+Show version.
+
 =back
 
 =head1 COMMANDS

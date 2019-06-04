@@ -7,7 +7,11 @@ MANPREFIX ?= $(PREFIX)/share/man
 
 MANPAGE = auto-inhibit.1
 
-all: $(MANPAGE)
+all: auto-inhibit $(MANPAGE)
+
+auto-inhibit: auto-inhibit.in
+	sed -e "s/VERSION=/VERSION=$(VERSION)/" auto-inhibit.in > auto-inhibit
+	chmod +x auto-inhibit
 
 $(MANPAGE): man/$(MANPAGE).pod
 	pod2man -n=auto-inhibit -c=auto-inhibit -r=$(VERSION) $< $(MANPAGE)
@@ -26,9 +30,9 @@ uninstall:
 	rm -f $(DESTDIR)$(MANPREFIX)/man1/auto-inhibit.1
 
 clean:
-	rm -f $(MANPAGE)
+	rm -f auto-inhibit $(MANPAGE)
 
-test:
+test: auto-inhibit
 	$(MAKE) -C test
 
 .PHONY: all install uninstall clean test

@@ -4,6 +4,8 @@
 
 set -eu
 
+readonly VERSION=
+
 readonly CONFIG="${AUTO_INHIBIT_CONF:-/etc/auto-inhibit.conf}"
 readonly INHIBITOR="${AUTO_INHIBITOR:-$(command -v auto-inhibit)}"
 
@@ -64,6 +66,7 @@ usage() {
 options:
   -h        Show help message
   -d DIR    Operate on DIR
+  -v        Show version
 
 commands:
   list      List symlinks
@@ -85,10 +88,11 @@ status() {
     exit $?
 }
 
-while getopts ':hd:' opt; do
+while getopts ':hd:v' opt; do
     case "$opt" in
         h) usage; exit ;;
         d) symdir="$OPTARG" ;;
+        v) echo "$VERSION"; exit ;;
         *) usage >&2; exit 2
     esac
 done
