@@ -43,4 +43,11 @@ auto-inhibit -d . remove &&
 test_expect_code 2 auto-inhibit -d . check
 '
 
+test_expect_success 'Fail if not in config' '
+ln -s "$AUTO_INHIBITOR" head &&
+test_expect_code 1 ./head
+'
+
 test_done
+
+# vim: ft=sh
