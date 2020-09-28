@@ -107,14 +107,14 @@ case "$1" in
         ;;
     generate)
         check_config
-        for f in $(iniq -d "$CONFIG"); do
+        for f in $(iniq "$CONFIG"); do
             ln -vs "$INHIBITOR" "$symdir/$f"
         done
         ;;
     check)
         check_config
         r=0
-        for f in $(iniq -d "$CONFIG"); do
+        for f in $(iniq "$CONFIG"); do
             err=''
             if [[ ! -e "$symdir/$f" ]]; then
                 err="$f does not exist"
