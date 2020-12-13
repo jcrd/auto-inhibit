@@ -10,7 +10,7 @@ MANPAGE = auto-inhibit.1
 all: auto-inhibit $(MANPAGE)
 
 auto-inhibit: auto-inhibit.in
-	sed -e "s/VERSION=/VERSION=$(VERSION)/" auto-inhibit.in > auto-inhibit
+	sed -e "s/@VERSION/$(VERSION)/" auto-inhibit.in > auto-inhibit
 	chmod +x auto-inhibit
 
 $(MANPAGE): man/$(MANPAGE).pod

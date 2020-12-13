@@ -4,7 +4,7 @@
 
 set -eu
 
-readonly VERSION=
+readonly VERSION=@VERSION
 
 readonly CONFIG="${AUTO_INHIBIT_CONF:-/etc/auto-inhibit.conf}"
 readonly INHIBITOR="${AUTO_INHIBITOR:-$(command -v auto-inhibit)}"
