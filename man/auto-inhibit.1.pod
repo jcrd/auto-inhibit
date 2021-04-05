@@ -71,7 +71,7 @@ Running I<aria2c> via the symlink will result in:
 
 =head1 AUTHOR
 
-James Reed E<lt>jcrd@tuta.ioE<gt>
+James Reed E<lt>james@twiddlingbits.netE<gt>
 
 =head1 REPORTING BUGS
 
